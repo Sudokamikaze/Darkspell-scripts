@@ -31,7 +31,7 @@ echo -n "Do you wan't to push zip to sdcard? [Y/N]: "
 read push
 case "$push" in
   y|Y) adb shell mkdir /storage/E53B-ACF6/Darkspell
-  adb push $DATE-$CONFIG_LOCALVERSION-$VER-$DEVICE.zip /storage/E53B-ACF6/Darkspell/
+  adb push "$DATE"$CONFIG_LOCALVERSION-$VER-$DEVICE.zip /storage/E53B-ACF6/Darkspell/
   ;;
   n|N) echo You may grab your zip file in Darkspell-Flasher-$DEVICE directory
   ;;
