@@ -2,6 +2,21 @@
 
 eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep TOOLCHAIN_PATH= ./config.buildscripts)
+eval $(grep VER= ./config.buildscripts)
+
+function modules {
+  MODULES_DIR="$DIR/modules_dir"
+  echo "Copying modules"
+  cd $KERNEL_DIR
+  rm $MODULES_DIR/*
+  find . -name '*.ko' -exec cp {} $MODULES_DIR/ \;
+  cd $MODULES_DIR
+  echo "Stripping modules for size"
+  $STRIP --strip-unneeded *.ko
+  zip -9 modules *
+  cd $KERNEL_DIR
+}
+
 
 case "$DEVICE" in
   taoshan) ONLYZIMAGE=true
@@ -37,6 +52,10 @@ make -j5
 
 if [ -a $ZIMAGE ];
 then
+
+if [ "$VER" == "LP" ]; then
+  modules
+fi
 
 if [ "$ONLYZIMAGE" == "false" ]; then
 echo "Creating boot image"

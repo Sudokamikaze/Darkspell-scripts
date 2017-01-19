@@ -2,10 +2,11 @@
 
 eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep CONFIG_LOCALVERSION= ../arch/arm/configs/pulshen_"$DEVICE"_defconfig)
-
+eval $(grep VER= ./config.buildscripts)
+eval $(grep BRANCH= ./config.buildscripts)
 
 rm -rf Darkspell-Flasher-*
-git clone https://github.com/Sudokamikaze/Darkspell-Flasher-"$DEVICE".git -b "$VER" && cd Darkspell-Flasher-"$DEVICE"
+git clone https://github.com/Sudokamikaze/Darkspell-Flasher-"$DEVICE".git -b "$BRANCH" && cd Darkspell-Flasher-"$DEVICE"
 
 case "$DEVICE" in
   taoshan)
