@@ -4,7 +4,7 @@ eval $(grep DEVICE= ./config.buildscripts)
 
 export ARCH=arm
 export SUBARCH=arm
-make pulshen_taoshan_defconfig
+make pulshen_"$DEVICE"_defconfig
 make menuconfig
 make savedefconfig && cp defconfig arch/arm/configs/pulshen_"$DEVICE"_defconfig
 rm defconfig
