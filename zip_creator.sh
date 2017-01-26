@@ -25,7 +25,7 @@ echo Signing zip file
 cd signer && java -jar signapk.jar testkey.x509.pem testkey.pk8 Darkspell-Stable.zip Darkspell-Stable-signed.zip
 echo Done!
 rm Darkspell-Stable.zip
-mv Darkspell-Stable-signed.zip ../$DATE-$CONFIG_LOCALVERSION-$VER-$DEVICE.zip
+mv Darkspell-Stable-signed.zip ../$DATE$CONFIG_LOCALVERSION-$VER-$DEVICE.zip
 cd ..
 echo -n "Do you wan't to push zip to sdcard? [Y/N]: "
 read push
