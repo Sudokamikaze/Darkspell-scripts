@@ -19,7 +19,13 @@ cp ../boot.img ./
 esac
 
 DATE=$(date +%d-%m-%Y)
-zip Darkspell-Stable.zip -r META-INF presets system tools
+
+case "$DEVICE" in
+  taoshan) zip Darkspell-Stable.zip -r META-INF presets system tools
+  ;;
+  grouper) zip Darkspell-Stable.zip -r META-INF tools fstab boot.img
+  ;;
+esac
 mv Darkspell-Stable.zip signer/
 echo Signing zip file
 cd signer && java -jar signapk.jar testkey.x509.pem testkey.pk8 Darkspell-Stable.zip Darkspell-Stable-signed.zip
