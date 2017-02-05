@@ -3,6 +3,7 @@
 eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep TOOLCHAIN_PATH= ./config.buildscripts)
 eval $(grep VER= ./config.buildscripts)
+eval $(grep ONLYZIMAGE= ./config.buildscripts)
 
 function modules {
   MODULES_DIR="$DIR/modules_dir"
@@ -16,14 +17,6 @@ function modules {
   zip -9 modules *
   cd $KERNEL_DIR
 }
-
-
-case "$DEVICE" in
-  taoshan) ONLYZIMAGE=true
-  ;;
-  grouper) ONLYZIMAGE=false
-  ;;
-esac
 
 DIR=$(pwd)
 
