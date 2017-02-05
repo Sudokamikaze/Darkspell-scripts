@@ -4,6 +4,7 @@ eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep CONFIG_LOCALVERSION= ./arch/arm/configs/pulshen_"$DEVICE"_defconfig)
 eval $(grep VER= ./config.buildscripts)
 eval $(grep BRANCH= ./config.buildscripts)
+DATE=$(date +%d-%m-%Y)
 
 rm -rf Darkspell-Flasher-*
 git clone https://github.com/Sudokamikaze/Darkspell-Flasher-"$DEVICE".git -b "$BRANCH" && cd Darkspell-Flasher-"$DEVICE"
@@ -18,14 +19,21 @@ cp ../boot.img ./
   ;;
 esac
 
-DATE=$(date +%d-%m-%Y)
-
-case "$DEVICE" in
-  taoshan) zip Darkspell-Stable.zip -r META-INF presets system tools
-  ;;
-  grouper) zip Darkspell-Stable.zip -r META-INF tools fstab boot.img
-  ;;
+function zipcreate {
+ case "$DEVICE" in
+   taoshan) zip Darkspell-Stable.zip -r META-INF presets system tools
+   ;;
+   grouper)
+   if [ "$VER" == "MM" ]; then
+     zip Darkspell-Stable.zip -r META-INF tools
+   elif [ "$VER" == "KK" ]; then
+     zip Darkspell-Stable.zip -r META-INF tools fstab boot.img
+fi
+   ;;
 esac
+}
+
+zipcreate
 mv Darkspell-Stable.zip signer/
 echo Signing zip file
 cd signer && java -jar signapk.jar testkey.x509.pem testkey.pk8 Darkspell-Stable.zip Darkspell-Stable-signed.zip
