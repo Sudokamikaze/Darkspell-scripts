@@ -21,7 +21,11 @@ esac
 
 function zipcreate {
  case "$DEVICE" in
-   taoshan) zip Darkspell-Stable.zip -r META-INF presets system tools
+   taoshan)
+   if [ "$VER" == "LP" ]; then
+   cp ../modules_dir/*.ko system/lib/modules
+ fi
+   zip Darkspell-Stable.zip -r META-INF presets system tools
    ;;
    grouper)
    if [ "$VER" == "MM" ]; then

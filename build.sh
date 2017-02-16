@@ -6,6 +6,12 @@ eval $(grep VER= ./config.buildscripts)
 eval $(grep ONLYZIMAGE= ./config.buildscripts)
 
 function modules {
+  local check=$(ls | grep modules_dir)
+
+if [ "$check" != "modules_dir" ]; then
+  cd $KERNEL_DIR && mkdir modules_dir
+fi
+
   MODULES_DIR="$DIR/modules_dir"
   echo "Copying modules"
   cd $KERNEL_DIR
