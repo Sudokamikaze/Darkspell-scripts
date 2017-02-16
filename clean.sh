@@ -1,6 +1,7 @@
 #!/bin/bash
 
 eval $(grep CLEAN_TOOLCHAIN_PATH= ./config.buildscripts)
+eval $(grep VER= ./config.buildscripts)
 
 toolchain="$HOME/$CLEAN_TOOLCHAIN_PATH"
 
@@ -11,3 +12,6 @@ rm -rf $KERNEL_DIR/ramdisk.cpio
 rm -rf $KERNEL_DIR/root.fs
 rm -rf $KERNEL_DIR/boot.img
 rm -rf Darkspell-Flasher-*
+if [ "$VER" == "LP" ]; then
+rm -rf $KERNEL_DIR/modules_dir/*
+fi
