@@ -15,7 +15,11 @@ cp ../arch/arm/boot/zImage tools/
 cp ../drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini system/etc/firmware/wlan/prima/
   ;;
   grouper)
-cp ../boot.img ./
+  if [ "$VER" == "MM" ]; then
+    cp ../arch/arm/boot/zImage tools/
+  elif [ "$VER" == "KK" ]; then
+    cp ../boot.img ./
+fi
   ;;
 esac
 
