@@ -1,4 +1,11 @@
 # Darkspell-scripts
+
+# Install
+
+Execute this command at top directory of Darkspell kernel
+
+`wget https://raw.githubusercontent.com/Sudokamikaze/Darkspell-scripts/master/bootstrap.sh -O - | bash`
+
 Bash build scripts for my Darkspell-* kernels
 
 There table is description for config.buildscripts in each Darkspell-* kernel
