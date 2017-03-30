@@ -15,11 +15,7 @@ cp ../arch/arm/boot/zImage tools/
 cp ../drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini system/etc/firmware/wlan/prima/
   ;;
   grouper)
-  if [ "$VER" == "MM" ]; then
-    cp ../arch/arm/boot/zImage tools/
-  elif [ "$VER" == "KK" ]; then
-    cp ../boot.img ./
-fi
+  cp ../arch/arm/boot/zImage tools/
   ;;
 esac
 
@@ -32,10 +28,7 @@ function zipcreate {
    zip Darkspell-Stable.zip -r META-INF presets system tools
    ;;
    grouper)
-   if [ "$VER" == "MM" ]; then
-     zip Darkspell-Stable.zip -r META-INF tools
-   elif [ "$VER" == "KK" ]; then
-     zip Darkspell-Stable.zip -r META-INF tools fstab boot.img
+   zip Darkspell-Stable.zip -r META-INF tools
 fi
    ;;
 esac
