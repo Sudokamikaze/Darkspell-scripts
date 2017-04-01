@@ -29,7 +29,6 @@ function zipcreate {
    ;;
    grouper)
    zip Darkspell-Stable.zip -r META-INF tools
-fi
    ;;
 esac
 }
