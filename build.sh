@@ -26,10 +26,8 @@ fi
 
 DIR=$(pwd)
 
-# Define here your toolchain path
-toolchain="$HOME/$TOOLCHAIN_PATH"
-export CROSS_COMPILE="$toolchain/bin/arm-eabi-"
-STRIP="$toolchain/bin/arm-eabi-strip"
+export CROSS_COMPILE="$TOOLCHAIN_PATH/bin/arm-eabi-"
+STRIP="$TOOLCHAIN_PATH/bin/arm-eabi-strip"
 ZIMAGE="$DIR/arch/arm/boot/zImage"
 KERNEL_DIR="$DIR"
 MKBOOTIMG="$DIR/tools/mkbootimg"
