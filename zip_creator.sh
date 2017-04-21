@@ -1,7 +1,7 @@
 #!/bin/bash
 
 eval $(grep DEVICE= ./config.buildscripts)
-eval $(grep CONFIG_LOCALVERSION= ./arch/arm/configs/pulshen_"$DEVICE"_defconfig)
+eval $(grep CONFIG_LOCALVERSION= ./arch/arm/configs/sudokamikaze_"$DEVICE"_defconfig)
 eval $(grep VER= ./config.buildscripts)
 eval $(grep BRANCH= ./config.buildscripts)
 DATE=$(date +%d-%m-%Y)

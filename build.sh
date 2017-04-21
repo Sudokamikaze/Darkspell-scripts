@@ -46,7 +46,7 @@ then
 rm $ZIMAGE
 fi
 
-make pulshen_"$DEVICE"_defconfig
+make sudokamikaze_"$DEVICE"_defconfig
 make -j5
 
 if [ -a $ZIMAGE ];
