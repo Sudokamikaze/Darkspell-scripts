@@ -64,6 +64,7 @@ case "$DEVICE" in
   ;;
   grouper) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "androidboot.selinux=permissive" --base 0x10000000 --pagesize 2048 -o $KERNEL_DIR/boot.img
   ;;
+  mako) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=mako lpj=67677 user_debug=31" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x01600000 -o $KERNEL_DIR/boot.img
 esac
 
 fi

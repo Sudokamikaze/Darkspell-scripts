@@ -10,7 +10,7 @@ rm -rf Darkspell-Flasher-*
 git clone https://github.com/Sudokamikaze/Darkspell-Flasher-"$DEVICE".git -b "$BRANCH" && cd Darkspell-Flasher-"$DEVICE"
 
 case "$DEVICE" in
-  taoshan)
+  taoshan|mako)
 cp ../arch/arm/boot/zImage tools/
 cp ../drivers/staging/prima/firmware_bin/WCNSS_qcom_cfg.ini system/etc/firmware/wlan/prima/
   ;;
@@ -21,7 +21,7 @@ esac
 
 function zipcreate {
  case "$DEVICE" in
-   taoshan)
+   taoshan|mako)
    if [ "$VER" == "LP" ]; then
    cp ../modules_dir/*.ko system/lib/modules
  fi
