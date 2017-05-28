@@ -35,7 +35,7 @@ echo "Done, grab your file in flasher directory"
 
 function anykernel_flasher {
 git clone git@github.com:Sudokamikaze/AnyKernel2_mako.git -b $BRANCH && cd AnyKernel2_mako
-cp arch/arm/boot/zImage ./
+cp ../arch/arm/boot/zImage ./
 zip Sinai.zip -r *
 mv Sinai.zip $VER$CONFIG_LOCALVERSION-$DEVICE-$DATE.zip
 echo "Done, grab your file in flasher directory"
