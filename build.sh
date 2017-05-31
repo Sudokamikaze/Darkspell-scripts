@@ -32,8 +32,14 @@ echo "2. CM"
 echo -n "Select build variant: "
 read typ
 case "$typ" in
-  2) patch -p1 -i ./CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format
-  patch -p1 -i ./CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format
+  2)
+  checkvar=$(grep -c "case MDP_YCBYCR_H2V1:" drivers/video/msm/mdp4_overlay.c)
+  if [ "$checkvar" != 0 ]; then
+  echo "Patches already included, compiling.."
+  else
+    patch -p1 -i ./CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format
+    patch -p1 -i ./CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format
+  fi
   ;;
 esac
 fi
