@@ -24,6 +24,20 @@ fi
   cd $KERNEL_DIR
 }
 
+function variant {
+if [ "$DEVICE" == "mako" ]; then
+echo "1. AOSP"
+echo "2. CM"
+echo -n "Select build variant: "
+read typ
+case "$typ" in
+  2) patch -p1 -i ./CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format
+  patch -p1 -i ./CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format
+  ;;
+esac
+fi
+}
+
 DIR=$(pwd)
 
 export CROSS_COMPILE="$TOOLCHAIN_PATH/bin/arm-eabi-"
@@ -44,6 +58,7 @@ then
 rm $ZIMAGE
 fi
 
+variant
 make sudokamikaze_"$DEVICE"_defconfig
 make -j5
 
@@ -73,4 +88,8 @@ DIFF=$(($BUILD_END - $BUILD_START))
 echo "Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
 else
 echo "Compilation failed! Fix the errors!"
+fi
+
+if [ "$typ" == "2" ]; then
+  git reset --hard HEAD
 fi
