@@ -6,6 +6,7 @@ eval $(grep VER= ./config.buildscripts)
 eval $(grep ONLYZIMAGE= ./config.buildscripts)
 
 function modules {
+  STRIP="$TOOLCHAIN_PATH/bin/arm-eabi-strip"
   local check=$(ls | grep modules_dir)
 
 if [ "$check" != "modules_dir" ]; then
@@ -41,7 +42,6 @@ fi
 DIR=$(pwd)
 
 export CROSS_COMPILE="$TOOLCHAIN_PATH/bin/arm-eabi-"
-STRIP="$TOOLCHAIN_PATH/bin/arm-eabi-strip"
 ZIMAGE="$DIR/arch/arm/boot/zImage"
 KERNEL_DIR="$DIR"
 MKBOOTIMG="$DIR/tools/mkbootimg"
