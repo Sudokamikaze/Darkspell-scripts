@@ -37,7 +37,12 @@ function anykernel_flasher {
 git clone git@github.com:Sudokamikaze/AnyKernel2_mako.git -b $BRANCH && cd AnyKernel2_mako
 cp ../arch/arm/boot/zImage ./
 zip Sinai.zip -r *
+if [ "$CMVARIANT" == "true" ]; then
+  mv Sinai.zip $VER-CM$CONFIG_LOCALVERSION-$DEVICE-$DATE.zip
+  unset $CMVARIANT
+else
 mv Sinai.zip $VER$CONFIG_LOCALVERSION-$DEVICE-$DATE.zip
+fi
 echo "Done, grab your file in flasher directory"
 }
 
