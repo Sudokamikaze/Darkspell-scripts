@@ -34,7 +34,7 @@ echo "Done, grab your file in flasher directory"
 }
 
 function anykernel_flasher {
-git clone git@github.com:Sudokamikaze/AnyKernel2_mako.git -b $BRANCH && cd AnyKernel2_mako
+git clone git@github.com:Sudokamikaze/AnyKernel2-SINAI.git -b $BRANCH && cd AnyKernel2-SINAI
 cp ../arch/arm/boot/zImage ./
 zip Sinai.zip -r *
 if [ "$CMVARIANT" == "true" ]; then
