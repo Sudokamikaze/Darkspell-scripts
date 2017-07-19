@@ -38,9 +38,9 @@ git clone git@github.com:Sudokamikaze/AnyKernel2-SINAI.git -b $BRANCH && cd AnyK
 cp ../arch/arm/boot/zImage ./
 zip Kernel.zip -r *
 case "$LOS" in
-  true) mv Kernel.zip $KERNELNAME_$VER-LOS_$DEVICE_$DATE.zip
+  true) mv Kernel.zip "$KERNELNAME"_"$VER"-LOS_"$DEVICE"_"$DATE".zip
   ;;
-  *) mv Kernel.zip $KERNELNAME_$VER_$DEVICE_$DATE.zip
+  *) mv Kernel.zip "$KERNELNAME"_"$VER"_"$DEVICE"_"$DATE".zip
   ;;
 esac
 echo "Done, grab your file in flasher directory"
