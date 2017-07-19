@@ -4,6 +4,7 @@ eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep TOOLCHAIN_PATH= ./config.buildscripts)
 eval $(grep VER= ./config.buildscripts)
 eval $(grep ONLYZIMAGE= ./config.buildscripts)
+eval $(grep DEFCONFIG= ./config.buildscripts)
 
 function modules {
   STRIP="$TOOLCHAIN_PATH/bin/arm-eabi-strip"
@@ -28,7 +29,7 @@ fi
 function variant {
 if [ "$DEVICE" == "mako" ]; then
 echo "1. AOSP"
-echo "2. CM"
+echo "2. LOS"
 echo -n "Select build variant: "
 read typ
 case "$typ" in
@@ -40,7 +41,7 @@ case "$typ" in
     patch -p1 -i ./CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format
     patch -p1 -i ./CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format
     patch -p1 -i ./CM/YUV_format-to-MDP_CM
-    export CMVARIANT=true
+    export LOS=true
   fi
   ;;
 esac
@@ -67,7 +68,7 @@ rm $ZIMAGE
 fi
 
 variant
-make sudokamikaze_"$DEVICE"_defconfig
+make $DEFCONFIG
 make -j5
 
 if [ -a $ZIMAGE ];

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 eval $(grep DEVICE= ./config.buildscripts)
-eval $(grep CONFIG_LOCALVERSION= ./arch/arm/configs/sudokamikaze_"$DEVICE"_defconfig)
+eval $(grep KERNELNAME= ./config.buildscripts)
 eval $(grep VER= ./config.buildscripts)
 eval $(grep BRANCH= ./config.buildscripts)
 eval $(grep FLASHER= ./config.buildscripts)
@@ -36,13 +36,13 @@ echo "Done, grab your file in flasher directory"
 function anykernel_flasher {
 git clone git@github.com:Sudokamikaze/AnyKernel2-SINAI.git -b $BRANCH && cd AnyKernel2-SINAI
 cp ../arch/arm/boot/zImage ./
-zip Sinai.zip -r *
-if [ "$CMVARIANT" == "true" ]; then
-  mv Sinai.zip $VER-CM$CONFIG_LOCALVERSION-$DEVICE-$DATE.zip
-  unset $CMVARIANT
-else
-mv Sinai.zip $VER$CONFIG_LOCALVERSION-$DEVICE-$DATE.zip
-fi
+zip Kernel.zip -r *
+case "$LOS" in
+  true) mv Kernel.zip $KERNELNAME_$VER-LOS_$DEVICE_$DATE.zip
+  ;;
+  *) mv Kernel.zip $KERNELNAME_$VER_$DEVICE_$DATE.zip
+  ;;
+esac
 echo "Done, grab your file in flasher directory"
 }
 

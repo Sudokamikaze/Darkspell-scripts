@@ -10,7 +10,7 @@ rm -rf $KERNEL_DIR/ramdisk.cpio
 rm -rf $KERNEL_DIR/root.fs
 rm -rf $KERNEL_DIR/boot.img
 rm -rf Darkspell-Flasher-*
-rm -rf AnyKernel2_mako
+rm -rf AnyKernel2*
 if [ "$VER" == "LP" ]; then
 rm -rf $KERNEL_DIR/modules_dir/*
 fi
