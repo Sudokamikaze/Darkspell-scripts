@@ -60,7 +60,7 @@ BUILD_START=$(date +"%s")
 export ARCH=arm
 export SUBARCH=arm
 export KBUILD_BUILD_USER="Sudokamikaze"
-export KBUILD_BUILD_HOST="QUVNTNM"
+export KBUILD_BUILD_HOST="Youth"
 DATE=$(date +%Y-%m-%d:%H:%M:%S)
 if [ -a $KERNEL_DIR/arch/arm/boot/zImage ];
 then
