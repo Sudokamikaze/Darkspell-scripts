@@ -41,7 +41,6 @@ case "$typ" in
     patch -p1 -i ./CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format
     patch -p1 -i ./CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format
     patch -p1 -i ./CM/YUV_format-to-MDP_CM
-    export LOS=true
   fi
   ;;
 esac
@@ -97,8 +96,20 @@ DIFF=$(($BUILD_END - $BUILD_START))
 echo "Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
 else
 echo "Compilation failed! Fix the errors!"
+exit 1
 fi
 
 if [ "$typ" == "2" ]; then
   git reset --hard HEAD
 fi
+
+echo -n "Do you want to create zip?[Y/N]: "
+read zipcreate
+case "$zipcreate" in
+  y|Y) 
+  if [ "$typ" == "2" ]; then
+  export LOS=true
+  fi
+  ./zip_creator.sh
+  ;;
+esac
