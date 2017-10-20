@@ -84,10 +84,6 @@ else
 echo "Compilation failed! Fix the errors!"
 exit 1
 fi
-
-if [ "$typ" == "true" ]; then
-git reset --hard HEAD
-fi
 }
 
 build
