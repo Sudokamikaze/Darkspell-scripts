@@ -63,14 +63,13 @@ then
 echo "Kernel already builded."; exit 1
 fi
 
-variant
 make $DEFCONFIG
 make -j5
 
 if [ -a $ZIMAGE ];
 then
 
-if [ "$MODULES" == "true" ];
+if [ "$MODULES" == "true" ]; then
 modules
 fi
 
