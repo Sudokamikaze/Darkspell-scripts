@@ -1,33 +1,33 @@
 #!/bin/bash
-
 eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep TOOLCHAIN_PATH= ./config.buildscripts)
-eval $(grep VER= ./config.buildscripts)
 eval $(grep ONLYZIMAGE= ./config.buildscripts)
 eval $(grep DEFCONFIG= ./config.buildscripts)
+eval $(grep PATCH= ./config.buildscripts)
+eval $(grep MODULES= ./config.buildscripts)
 
-function modules {
-  STRIP="$TOOLCHAIN_PATH/bin/arm-eabi-strip"
-  local check=$(ls | grep modules_dir)
+export CROSS_COMPILE="$TOOLCHAIN_PATH/bin/arm-eabi-"
+ZIMAGE="$(pwd)/arch/arm/boot/zImage"
+KERNEL_DIR=$(pwd)
+MKBOOTIMG="$(pwd)/tools/mkbootimg"
+MKBOOTFS="$(pwd)/tools/mkbootfs"
+BUILD_START=$(date +"%s")
 
-if [ "$check" != "modules_dir" ]; then
-  cd $KERNEL_DIR && mkdir modules_dir
-fi
+function boot_creation {
+echo "Creating boot image"
+$MKBOOTFS ramdisk/ > $KERNEL_DIR/ramdisk.cpio
+cat $KERNEL_DIR/ramdisk.cpio | gzip > $KERNEL_DIR/root.fs
 
-  MODULES_DIR="$DIR/modules_dir"
-  echo "Copying modules"
-  cd $KERNEL_DIR
-  rm $MODULES_DIR/*
-  find . -name '*.ko' -exec cp {} $MODULES_DIR/ \;
-  cd $MODULES_DIR
-  echo "Stripping modules for size"
-  $STRIP --strip-unneeded *.ko
-  zip -9 modules *
-  cd $KERNEL_DIR
+case "$DEVICE" in
+  taoshan) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.selinux=permissive user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 maxcpus=2" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x02000000 -o $KERNEL_DIR/boot.img
+  ;;
+  grouper) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "androidboot.selinux=permissive" --base 0x10000000 --pagesize 2048 -o $KERNEL_DIR/boot.img
+  ;;
+  mako) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=mako lpj=67677 user_debug=31" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x01600000 -o $KERNEL_DIR/boot.img
+esac
 }
 
-function variant {
-if [ "$DEVICE" == "mako" ]; then
+function patching {
 echo "1. AOSP"
 echo "2. LOS"
 echo -n "Select build variant: "
@@ -44,26 +44,23 @@ case "$typ" in
   fi
   ;;
 esac
-fi
 }
 
-DIR=$(pwd)
+function build {
 
-export CROSS_COMPILE="$TOOLCHAIN_PATH/bin/arm-eabi-"
-ZIMAGE="$DIR/arch/arm/boot/zImage"
-KERNEL_DIR="$DIR"
-MKBOOTIMG="$DIR/tools/mkbootimg"
-MKBOOTFS="$DIR/tools/mkbootfs"
-BUILD_START=$(date +"%s")
+if [ "$PATCH" == "true" ]; then
+patching
+fi
 
 export ARCH=arm
 export SUBARCH=arm
 export KBUILD_BUILD_USER="Sudokamikaze"
 export KBUILD_BUILD_HOST="Youth"
 DATE=$(date +%Y-%m-%d:%H:%M:%S)
-if [ -a $KERNEL_DIR/arch/arm/boot/zImage ];
+
+if [ -f $KERNEL_DIR/arch/arm/boot/zImage ];
 then
-rm $ZIMAGE
+echo "Kernel already builded."; exit 1
 fi
 
 variant
@@ -73,43 +70,24 @@ make -j5
 if [ -a $ZIMAGE ];
 then
 
-if [ "$VER" == "LP" ]; then
-  modules
+if [ "$MODULES" == "true" ];
+modules
 fi
 
 if [ "$ONLYZIMAGE" == "false" ]; then
-echo "Creating boot image"
-$MKBOOTFS ramdisk/ > $KERNEL_DIR/ramdisk.cpio
-cat $KERNEL_DIR/ramdisk.cpio | gzip > $KERNEL_DIR/root.fs
-
-case "$DEVICE" in
-  taoshan) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.selinux=permissive user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 maxcpus=2" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x02000000 -o $KERNEL_DIR/boot.img
-  ;;
-  grouper) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "androidboot.selinux=permissive" --base 0x10000000 --pagesize 2048 -o $KERNEL_DIR/boot.img
-  ;;
-  mako) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=mako lpj=67677 user_debug=31" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x01600000 -o $KERNEL_DIR/boot.img
-esac
-
+boot_creation
 fi
-BUILD_END=$(date +"%s")
-DIFF=$(($BUILD_END - $BUILD_START))
+
+BUILD_END=$(date +"%s") && DIFF=$(($BUILD_END - $BUILD_START))
 echo "Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
 else
 echo "Compilation failed! Fix the errors!"
 exit 1
 fi
 
-if [ "$typ" == "2" ]; then
-  git reset --hard HEAD
+if [ "$typ" == "true" ]; then
+git reset --hard HEAD
 fi
+}
 
-echo -n "Do you want to create zip?[Y/N]: "
-read zipcreate
-case "$zipcreate" in
-  y|Y) 
-  if [ "$typ" == "2" ]; then
-  export LOS=true
-  fi
-  ./zip_creator.sh
-  ;;
-esac
+build
