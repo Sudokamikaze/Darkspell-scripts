@@ -37,10 +37,10 @@ function anykernel_flasher {
 git clone git@github.com:Sudokamikaze/AnyKernel2-SINAI.git -b $BRANCH && cd AnyKernel2-SINAI
 cp ../arch/arm/boot/zImage ./
 zip Kernel.zip -r *
-case "$(grep -c "case MDP_YCBYCR_H2V1:" drivers/video/msm/mdp4_overlay.c)" in
-  *) mv Kernel.zip "$KERNELNAME"_"LOS"-"$DEVICE"_"$DATE".zip
-  ;;
+case "$(grep -c "case MDP_YCBYCR_H2V1:" ../drivers/video/msm/mdp4_overlay.c)" in
   0) mv Kernel.zip "$KERNELNAME"_"$DEVICE"_"$DATE".zip
+  ;;
+  *) mv Kernel.zip "$KERNELNAME"_"LOS"-"$DEVICE"_"$DATE".zip
   ;;
 esac
 echo "Done, grab your file in flasher directory"
