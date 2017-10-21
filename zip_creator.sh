@@ -4,6 +4,7 @@ eval $(grep DEVICE= ./config.buildscripts)
 eval $(grep KERNELNAME= ./config.buildscripts)
 eval $(grep FLASHER= ./config.buildscripts)
 eval $(grep MODULES= ./config.buildscripts)
+eval $(grep BRANCH= ./config.buildscripts)
 DATE=$(date +%d-%m-%Y)
 
 function darkspell_flasher {
