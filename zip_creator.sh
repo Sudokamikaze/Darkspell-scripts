@@ -33,9 +33,31 @@ cd ..
 echo "Done, grab your file in flasher directory"
 }
 
+function pack_ramdisk {
+  case "$KERNELNAME" in
+  "SINAI-N4") 
+  mv kernel_files/sinai/anykernel.sh ./
+  mv kernel_files/sinai/init.sinai.rc ramdisk/
+  mv kernel_files/fstab ramdisk
+  ;;
+  "QuantaR")
+  mv kernel_files/quanta/anykernel.sh ./
+
+  case "$(grep -c "case MDP_YCBYCR_H2V1:" ../drivers/video/msm/mdp4_overlay.c)" in
+  0) mv kernel_files/quanta/init.quanta.rc ramdisk/ ;;
+  *) mv kernel_files/quanta/init.quanta.rc_cm ramdisk/init.quanta.rc ;;
+  esac
+
+  mv kernel_files/fstab ramdisk
+  ;;
+  esac
+rm -rf kernel_files
+}
+
 function anykernel_flasher {
 git clone git@github.com:Sudokamikaze/AnyKernel2-SINAI.git -b $BRANCH && cd AnyKernel2-SINAI
 cp ../arch/arm/boot/zImage ./
+pack_ramdisk
 zip Kernel.zip -r *
 case "$(grep -c "case MDP_YCBYCR_H2V1:" ../drivers/video/msm/mdp4_overlay.c)" in
   0) mv Kernel.zip "$KERNELNAME"_"$DEVICE"_"$DATE".zip
