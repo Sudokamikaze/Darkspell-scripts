@@ -38,7 +38,7 @@ function pack_ramdisk {
   "SINAI-N4") 
   mv kernel_files/sinai/anykernel.sh ./
   mv kernel_files/sinai/init.sinai.rc ramdisk/
-  mv kernel_files/fstab ramdisk
+  mv kernel_files/fstab.mako ramdisk
   ;;
   "QuantaR")
   mv kernel_files/quanta/anykernel.sh ./
@@ -48,10 +48,11 @@ function pack_ramdisk {
   *) mv kernel_files/quanta/init.quanta.rc_cm ramdisk/init.quanta.rc ;;
   esac
 
-  mv kernel_files/fstab ramdisk
+  mv kernel_files/fstab.mako ramdisk
   ;;
   esac
 rm -rf kernel_files
+rm ramdisk/placeholder
 }
 
 function anykernel_flasher {
