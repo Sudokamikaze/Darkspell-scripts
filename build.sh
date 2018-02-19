@@ -13,20 +13,6 @@ MKBOOTIMG="$(pwd)/tools/mkbootimg"
 MKBOOTFS="$(pwd)/tools/mkbootfs"
 BUILD_START=$(date +"%s")
 
-function boot_creation {
-echo "Creating boot image"
-$MKBOOTFS ramdisk/ > $KERNEL_DIR/ramdisk.cpio
-cat $KERNEL_DIR/ramdisk.cpio | gzip > $KERNEL_DIR/root.fs
-
-case "$DEVICE" in
-  taoshan) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=qcom androidboot.selinux=permissive user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 maxcpus=2" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x02000000 -o $KERNEL_DIR/boot.img
-  ;;
-  grouper) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "androidboot.selinux=permissive" --base 0x10000000 --pagesize 2048 -o $KERNEL_DIR/boot.img
-  ;;
-  mako) $MKBOOTIMG --kernel $ZIMAGE --ramdisk $KERNEL_DIR/root.fs --cmdline "console=ttyHSL0,115200,n8 androidboot.hardware=mako lpj=67677 user_debug=31" --base 0x80200000 --pagesize 2048 --ramdisk_offset 0x01600000 -o $KERNEL_DIR/boot.img
-esac
-}
-
 function patching {
 echo "1. AOSP"
 echo "2. LOS"
@@ -71,10 +57,6 @@ then
 
 if [ "$MODULES" == "true" ]; then
 modules
-fi
-
-if [ "$ONLYZIMAGE" == "false" ]; then
-boot_creation
 fi
 
 BUILD_END=$(date +"%s") && DIFF=$(($BUILD_END - $BUILD_START))
