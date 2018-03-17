@@ -13,7 +13,6 @@ function pack_ramdisk {
         case "$unlegacy" in
             y|Y) with_unlegacy=true ;;
         esac
-
         case "$KERNELNAME" in
             "SINAI-N4") 
                 if [ "$with_unlegacy" == "true" ]; then
@@ -34,7 +33,8 @@ function pack_ramdisk {
         mv kernel_files/fstab.mako ramdisk
         rm -rf kernel_files
         rm ramdisk/placeholder
-    fi
+        fi
+        create_zip
 }
 
 function create_zip {
