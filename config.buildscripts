@@ -1,0 +1,9 @@
+[DEVICE_PROPS]
+KERNELNAME=SINAI-N4
+DEVICE=mako
+PATCH=True
+BRANCH=sudokamikaze_kernels
+
+[BUILD]
+TOOLCHAIN_PATH=/home/haze/storage/toolchains/7.3_a15/bin/arm-eabi-
+DEFCONFIG=sudokamikaze_mako_defconfig
