@@ -28,19 +28,22 @@ class ZIPC:
         self.prepare_to()
 
     def prepare_to(self):
+        print('Clonning repo...')
         try:
             Repo.clone_from("https://github.com/Sudokamikaze/AnyKernel2-SINAI.git", "./AnyKernel2-SINAI")
         except:
             shutil.rmtree("AnyKernel2-SINAI")
             Repo.clone_from("https://github.com/Sudokamikaze/AnyKernel2-SINAI.git", "./AnyKernel2-SINAI")
 
-        os.chdir("AnyKernel2")
-        subprocess.call(["git checkout", self.__branch])
+        os.chdir("AnyKernel2-SINAI")
+        subprocess.call(['git', 'checkout', self.__branch])
         self.__ua_patches = str(input('Unlegact patch? [Y/N]: '))
         self.pack_ramdisk()
     
     def pack_ramdisk(self):
-        self.__patched = subprocess.run(['grep -c "case MDP_YCBYCR_H2V1:" ../drivers/video/msm/mdp4_overlay.c' ], stdout=subprocess.PIPE, universal_newlines=True)
+        self.__patched = subprocess.run(['grep', '-c', 'case MDP_YCBYCR_H2V1:', '../drivers/video/msm/mdp4_overlay.c' ], stdout=subprocess.PIPE, universal_newlines=True)
+        print(self.__patched)
+        os.remove('anykernel.sh')
         if self.__device == "mako":
             if self.__branding == "SINAI-N4":
                 if self.__ua_patches == "Y" or "y":
@@ -57,8 +60,9 @@ class ZIPC:
                     shutil.move("kernel_files/quanta/init.quanta.rc_cm", "ramdisk/init.quanta.rc")
             shutil.move("kernel_files/fstab.mako", "ramdisk/")
             shutil.rmtree("kernel_files")
+            print('ramdisk is ready')
         elif self.__device == "grouper":
-            # There's nothing to do
+            print('ramdisk is ready')
         self.create_zip()
 
         def create_zip(self):
