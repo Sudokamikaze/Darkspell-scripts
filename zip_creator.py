@@ -6,6 +6,7 @@ from git import Repo
 import os
 import shutil
 import datetime
+now = datetime.datetime.now()
 
 class ZIPC:
     __parser = configparser.ConfigParser()
@@ -15,9 +16,16 @@ class ZIPC:
     __branch = ""
     __branding = ""
     __patched = ""
+    __currdate = ""
 
     def __init__(self):
+        self.__currdate = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
         self.__parser.read(self.__config_file)
+        if os.path.isfile('patched') == True:
+            self.__patched = 3
+        else:
+            self.__patched = 0
+
         if self.__parser['DEVICE_PROPS']['DEVICE'] == "mako":
             self.__device = "mako"
             self.__branch = self.__parser['DEVICE_PROPS']['BRANCH']
@@ -41,13 +49,11 @@ class ZIPC:
         self.pack_ramdisk()
     
     def pack_ramdisk(self):
-        self.__patched = subprocess.run(['grep', '-c', 'case MDP_YCBYCR_H2V1:', '../drivers/video/msm/mdp4_overlay.c' ], stdout=subprocess.PIPE, universal_newlines=True)
-        print(self.__patched)
         os.remove('anykernel.sh')
         if self.__device == "mako":
             if self.__branding == "SINAI-N4":
                 if self.__ua_patches == "Y" or "y":
-                    self.__patched == 2
+                    self.__patched = 2
                     shutil.move("kernel_files/sinai/unlegacy/anykernel.sh", "./")
                 else:
                     shutil.move("kernel_files/sinai/anykernel.sh", "./")
@@ -65,12 +71,19 @@ class ZIPC:
             print('ramdisk is ready')
         self.create_zip()
 
-        def create_zip(self):
-            subprocess.call(['zip Kernel.zip', '-r *'])
-            if self.__patched == 0:
-                shutil.move("Kernel.zip", self.__branding + "_" + self.__device + "_" + datetime.date + ".zip")
-            elif self.__patched == 2:
-                shutil.move("Kernel.zip", self.__branding + "_" + self.__device + "-" + "UA_" + datetime.date + ".zip")        
-            else:
-                shutil.move("Kernel.zip", self.__branding + "_" + self.__device + "-" + "LOS_" + datetime.date + ".zip")        
-classcall = ZIPC()
+    def create_zip(self):
+        shutil.make_archive('../Kernel', 'zip', './')
+        os.chdir('../')
+        if self.__patched == 0:
+            os.rename('Kernel.zip', self.__branding + "_" + self.__device + "_" + self.__currdate + ".zip")
+        elif self.__patched == 2:
+            os.rename('Kernel.zip', self.__branding + "_" + self.__device + "-UA_" + self.__currdate + ".zip")        
+        elif self.__patched == 3:
+            os.rename('Kernel.zip', self.__branding + "_" + self.__device + "-LOS_" + self.__currdate + ".zip")        
+        print('Done!')
+
+try:
+    classcall = ZIPC()
+except KeyboardInterrupt:
+    print('Got keyboard interrupt, exiting...')
+    os.sys.exit(0)

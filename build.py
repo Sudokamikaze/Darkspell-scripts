@@ -26,6 +26,8 @@ class BUILD:
             subprocess.call(['patch', '-p1', '-i', './CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format'])
             subprocess.call(['patch', '-p1', '-i', './CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format'])
             subprocess.call(['patch', '-p1', '-i', './CM/YUV_format-to-MDP_CM'])
+            f = open('patched', "w+")
+            f.close()
         else: 
             print('Building without LOS patches...')
 
