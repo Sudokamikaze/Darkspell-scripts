@@ -45,12 +45,12 @@ class ZIPC:
 
         os.chdir("AnyKernel2-SINAI")
         subprocess.call(['git', 'checkout', self.__branch])
-        self.__ua_patches = str(input('Unlegact patch? [Y/N]: '))
         self.pack_ramdisk()
     
     def pack_ramdisk(self):
-        os.remove('anykernel.sh')
         if self.__device == "mako":
+            self.__ua_patches = str(input('Unlegacy patch? [Y/N]: '))
+            os.remove('anykernel.sh')
             if self.__branding == "SINAI-N4":
                 if self.__ua_patches == "Y" or "y":
                     self.__patched = 2
