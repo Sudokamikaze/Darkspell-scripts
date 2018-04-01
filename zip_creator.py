@@ -19,7 +19,7 @@ class ZIPC:
     __currdate = ""
 
     def __init__(self):
-        self.__currdate = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
+        self.__currdate = "0" + str(now.day) + "-0" + str(now.month) + "-" + str(now.year)
         self.__parser.read(self.__config_file)
         if os.path.isfile('patched') == True:
             self.__patched = 3
@@ -48,6 +48,7 @@ class ZIPC:
         self.pack_ramdisk()
     
     def pack_ramdisk(self):
+        shutil.copy2("../arch/arm/boot/zImage", './')
         if self.__device == "mako":
             self.__ua_patches = str(input('Unlegacy patch? [Y/N]: '))
             os.remove('anykernel.sh')
