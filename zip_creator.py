@@ -40,7 +40,6 @@ class ZIPC:
 
         os.chdir("AnyKernel2-SINAI")
         subprocess.call(['git', 'checkout', self.__branch])
-        os.remove('anykernel.sh')
         shutil.rmtree('.git')
         self.pack_ramdisk()
     
@@ -48,12 +47,8 @@ class ZIPC:
         if os.path.isfile('patched') == True:
             self.__patched = 3
         else:
-    
             if askua == True:
                 self.__ua_patches = str(input('Unlegacy patch? [Y/N]: '))
-            else:
-                self.__ua_patches = False
-    
             if self.__ua_patches == "Y" or self.__ua_patches == "y":
                 self.__patched = 2
             else:
@@ -61,27 +56,10 @@ class ZIPC:
 
     def pack_ramdisk(self):
         shutil.copy2("../arch/arm/boot/zImage", './')
-        if self.__device == "mako" and self.__branding == "SINAI-N4":
-            self.patcher(self, askua=True)
-            if self.__patched = 2:
-                shutil.move("kernel_files/sinai/unlegacy/anykernel.sh", "./")
-            elif self.__patched = 0:
-                shutil.move("kernel_files/sinai/anykernel.sh", "./")
-            shutil.move("kernel_files/sinai/init.sinai.rc", "ramdisk/")
-            shutil.move("kernel_files/fstab.mako", "ramdisk/")
-            shutil.rmtree("kernel_files")
-        
-        elif self.__device == "mako" and self.__branding == "QuantaR":
-            self.patcher(self, askua=False)
-            shutil.move("kernel_files/quanta/anykernel.sh", "./")
-            if self.__patched == 0:
-                shutil.move("kernel_files/quanta/init.quanta.rc" "ramdisk/")
-            else:
-                shutil.move("kernel_files/quanta/init.quanta.rc_cm", "ramdisk/init.quanta.rc")
-            shutil.move("kernel_files/fstab.mako", "ramdisk/")
-            shutil.rmtree("kernel_files")
-        print('ramdisk is ready')
-        
+        if self.__device == "mako":
+            self.patcher(askua=True)
+            if self.__patched == 2:
+                shutil.move("anykernel.sh_un", "anykernel.sh")     
         elif self.__device == "grouper":
             print('ramdisk is ready')
         self.create_zip()
