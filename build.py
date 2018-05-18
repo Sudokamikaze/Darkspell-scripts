@@ -3,7 +3,6 @@
 import configparser
 import subprocess
 import os
-import patch
 
 class BUILD:
     __parser = configparser.ConfigParser()
@@ -21,15 +20,23 @@ class BUILD:
         self.build()
 
     def patcher(self):
-        self.__patched = input('Apply LOS patches?[Y/N]: ')
-        if self.__patched == "Y" or self.__patched == "y":
-            subprocess.call(['patch', '-p1', '-i', './CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format'])
-            subprocess.call(['patch', '-p1', '-i', './CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format'])
-            subprocess.call(['patch', '-p1', '-i', './CM/YUV_format-to-MDP_CM'])
-            f = open('patched', "w+")
+        self.__patched = input('Apply LOS or BINDER patches?[L/B/N]: ')
+        if self.__patched == "L" or self.__patched == "l":
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/CM/0001-msm_fb-display-Add-support-to-YCBYCR-MDP-format'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/CM/0001-msm-rotator-Add-support-to-YCBYCR-rotator-format'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/CM/YUV_format-to-MDP_CM'])
+            f = open('patched_los', "w+")
+            f.close()
+        elif self.__patched == "B" or self.__patched == "b":
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/BINDER/support_for_8_byte_types'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/BINDER/kconfig_change'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/BINDER/correct_size_of_struct'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/BINDER/fix_warnings'])
+            subprocess.call(['patch', '-p1', '-i', './PATCHES/BINDER/defconfig_binder'])
+            f = open('patched_ua', "w+")
             f.close()
         else: 
-            print('Building without LOS patches...')
+            print('Building without any patches...')
 
 
     def build(self):

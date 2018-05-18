@@ -43,21 +43,18 @@ class ZIPC:
         shutil.rmtree('.git')
         self.pack_ramdisk()
     
-    def patcher(self, askua):
-        if os.path.isfile('patched') == True:
+    def patcher(self):
+        if os.path.isfile('patched_los') == True:
             self.__patched = 3
+        elif os.path.isfile('patched_ua') == True:
+            self.__patched = 2
         else:
-            if askua == True:
-                self.__ua_patches = str(input('Unlegacy patch? [Y/N]: '))
-            if self.__ua_patches == "Y" or self.__ua_patches == "y":
-                self.__patched = 2
-            else:
-                self.__patched = 0
+            self.__patched = 0
 
     def pack_ramdisk(self):
         shutil.copy2("../arch/arm/boot/zImage", './')
         if self.__device == "mako":
-            self.patcher(askua=True)
+            self.patcher()
             if self.__patched == 2:
                 shutil.move("anykernel.sh_un", "anykernel.sh")     
         elif self.__device == "grouper":

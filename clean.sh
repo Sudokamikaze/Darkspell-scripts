@@ -11,7 +11,10 @@ rm -rf $KERNEL_DIR/root.fs
 rm -rf $KERNEL_DIR/boot.img
 rm -rf Darkspell-Flasher-*
 rm -rf AnyKernel2*
-if [ -f "./patched" ]; then
+if [ -f "./patched_los" ]; then
+rm patched
+git reset --hard HEAD
+elif [ -f "./patched_ua" ]; then
 rm patched
 git reset --hard HEAD
 fi
